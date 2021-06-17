@@ -36,7 +36,7 @@ def calculate_score(cards):
 def compare(user_score, computer_score):
   """Compare the scores of the player and the computer and return the outcome of the comparisation """
   if user_score == computer_score:
-    return "Draw!"
+    return f"Draw! {art.logo_draw}"
   elif computer_score == 0:
     return f"Lose, computer has BlackJack {art.logo_lost} "
   elif user_score == 0:
