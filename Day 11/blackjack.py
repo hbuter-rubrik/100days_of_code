@@ -10,71 +10,78 @@
 ## Cards are not removed from the deck as they are drawn.
 ## The computer is the dealer.
 
-#from art import logo
-#from clearscreen import clear
+from art import logo
+from clearscreen import clear
 import random
-
 # Create empty lists for user and computer plus add list of cards
-user_cards = []
-computer_cards = []
-cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 
 # Create function to deal 2 random cards to user and computer
-def deal_card(player):
-  card1 = random.choice(cards)
-  card2 = random.choice(cards)
-  player += card1, card2
+def deal_card():
+  """Return random card from the deck"""
+  cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+  card = random.choice(cards)
+  return card
 
 # Calculate the score of both players  
-def calculate_score(player):
-  sum = 0
-  for i in player:
-    sum += i
-  #check for black jack!
-  if sum == 21:
-    sum = 0 
-  if sum > 21:
-    for k in player:
-      if k == 11:
-        player[k] = 1
-        sum = sum - 10
-  return sum
-  
-# add another card
-def next_card(player):
-  next_card = random.choice(cards)
-  player.append(next_card)
+def calculate_score(cards):
+  if sum(cards) == 21 and len(cards) == 2:
+    return 0
+  if 11 in cards and sum(cards) > 21:
+    cards.remove(11)
+    cards.append(1)
 
-# set variable for while loop - play_game
-play_game = True
-in_game = True
-while play_game:
-  play = input("Do you want to play a game of Blackjack? Type 'y' or 'n': ").lower()
-  if play == 'n':
-    print("thank you for playing, good bye!")
-    play_game = False
+  return sum(cards)
+
+def compare(user_score, computer_score):
+  if user_score == computer_score:
+    return "Draw!"
+  elif computer_score == 0:
+    return "Lose, computer has BlackJack :-( ) "
+  elif user_score == 0:
+    return "Win with a BlackJack :-D "
+  elif user_score > 21:
+    return "Busted, you Lose :-("
+  elif computer_score > 21:
+    return "Computer is busted, you win :-D "
+  elif user_score > computer_score:
+    return "You win :)"
   else:
-    # Deal the cards using the function  
-    deal_card(player=user_cards)
-    deal_card(player=computer_cards)
-    while in_game:
-      total_user = calculate_score(player=user_cards)
-      total_computer = calculate_score(player=computer_cards)
-      
-      print(f"Player cards are {user_cards} which totals to {total_user} ")
-      print(f"First dealer card is {computer_cards[0]} ")
-            
-      # Check if computer has 21
-      if total_computer == 21 or total_computer == 0:
-        print("Computer has blackjack, You lose!")
-        in_game = False
-        # Check if user has 21
-      elif total_user == 21 or total_user == 0:
-        print("You have black jack, You Win!")
-        in_game = False
-      
-      another_card = input("Would you like another card? type 'y' or 'n': ").lower
-      if another_card == 'y':
-        next_card(player=user_cards)
+    return "You lose :("
+
+def play_game():
+  print(logo)
+  user_cards = []
+  computer_cards = []
+  is_game_over = False
+
+  for _ in range(2):
+    user_cards.append(deal_card())
+    computer_cards.append(deal_card())
+
+  while not is_game_over:
+    user_score = calculate_score(user_cards)
+    computer_score = calculate_score(computer_cards)
+    print(f"your cards {user_cards} your score: {user_score}")
+    print(f"Computer first card: {computer_cards[0]}")
+
+    if user_score == 0 or computer_score == 0 or user_score > 21:
+      is_game_over = True
+    else:
+      user_should_deal = input("Would you like another card? type 'y' or 'n': ")
+      if user_should_deal == "y":
+        user_cards.append(deal_card())
       else:
-        in_game = False
+        is_game_over = True
+
+  while computer_score != 0 and computer_score <17:
+    computer_cards.append(deal_card())
+    computer_score = calculate_score(computer_cards)
+
+  print(f"Your final hand is {user_cards}, final score: {user_score}")
+  print(f"Computer's final hand is {computer_cards}, final score: {computer_score}")
+  print(compare(user_score, computer_score))
+
+while input("Do you want to play a game of Blackjack? Type 'y' or 'n': ").lower() == "y":
+  clear()
+  
+  play_game()
