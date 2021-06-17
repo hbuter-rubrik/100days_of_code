@@ -10,8 +10,9 @@
 ## Cards are not removed from the deck as they are drawn.
 ## The computer is the dealer.
 
-from art import logo
+import art
 from clearscreen import clear
+# from replit import clear # Use this line when using replit 
 import random
 # Create empty lists for user and computer plus add list of cards
 
@@ -22,34 +23,36 @@ def deal_card():
   card = random.choice(cards)
   return card
 
-# Calculate the score of both players  
+# Calculate the score of both players 
+"""Calculate the score for the player and the computer """ 
 def calculate_score(cards):
   if sum(cards) == 21 and len(cards) == 2:
     return 0
   if 11 in cards and sum(cards) > 21:
     cards.remove(11)
     cards.append(1)
-
   return sum(cards)
 
 def compare(user_score, computer_score):
+  """Compare the scores of the player and the computer and return the outcome of the comparisation """
   if user_score == computer_score:
     return "Draw!"
   elif computer_score == 0:
-    return "Lose, computer has BlackJack :-( ) "
+    return f"Lose, computer has BlackJack {art.logo_lost} "
   elif user_score == 0:
-    return "Win with a BlackJack :-D "
+    return f"Win with a BlackJack {art.logo_win} "
   elif user_score > 21:
-    return "Busted, you Lose :-("
+    return f"Busted, you Lose {art.logo_lost}"
   elif computer_score > 21:
-    return "Computer is busted, you win :-D "
+    return f"Computer is busted, you win {art.logo_win}"
   elif user_score > computer_score:
-    return "You win :)"
+    return f"You win {art.logo_win}"
   else:
-    return "You lose :("
+    return f"You lose {art.logo_lost}"
 
 def play_game():
-  print(logo)
+  """Play BlackJack :D """
+  print(art.logo)
   user_cards = []
   computer_cards = []
   is_game_over = False
@@ -83,5 +86,4 @@ def play_game():
 
 while input("Do you want to play a game of Blackjack? Type 'y' or 'n': ").lower() == "y":
   clear()
-  
   play_game()
